@@ -1,0 +1,13 @@
+---
+title: "Data Mining and Text Mining - Final Project"
+author: "Cindy Nguyen, Luiz Gustavo Fagundes Malpele, Isabel Zimmerman"
+output: html_notebook
+---
+
+
+```{r}
+# reading a CSV file
+
+```
+
+
