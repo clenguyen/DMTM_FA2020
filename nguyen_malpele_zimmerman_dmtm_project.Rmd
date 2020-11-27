@@ -4,10 +4,80 @@ author: "Cindy Nguyen, Luiz Gustavo Fagundes Malpele, Isabel Zimmerman"
 output: html_notebook
 ---
 
+```{r, message = FALSE, warning=FALSE}
+library(tidyverse)
+library(tidytext)
+library(topicmodels)
+library(textdata)
+library(igraph)
+library(ggraph)
+library(datetime)
+```
 
 ```{r}
 # reading a CSV file
+corona_tweets_raw <- read_csv("./Corona_tweets.csv")
+```
+
+```{r}
+corona_tweets_raw %>%
+  sample_n(size = 10)
+```
+
+Select only columns needed.
+```{r}
+corona_tweets <- corona_tweets_raw %>% 
+  select(Time, text)
+```
+
+Create a dataframe with a column for tweet manipulation. Need to remove urls, punctuation, tagged people, and escape characters.
+```{r}
+corona_tweets_clean <- corona_tweets
+```
+
+Function to clean tweets
+```{r}
+#clean tweets
+clean_tweets <- function(x) {
+  x %>% 
+    str_remove_all(" ?(f|ht)(tp)(s?)(://)(.*)[.|/](.*)") %>% #remove URLs
+    str_replace_all("&amp;", "and") %>% #change &amp; to and
+    str_remove_all("@[[:graph:]]+") %>% #remove @
+    str_remove_all("[[:punct:]]") %>% #remove punctuation
+    str_replace_all("\\\n",  " ") %>% #remove \n
+    str_replace_all("\\\r", " ") %>% #remove \r
+    str_replace_all("\\\u0091", "") %>% #remove \u0091
+    str_replace_all("\\\u0092", "") %>% #remove \u0092
+    str_replace_all("\\\u0093", "") %>% #remove \u0093
+    str_to_lower() #to lowercase
+}
+```
+
+```{r}
+corona_tweets_clean$clean_text <- clean_tweets(corona_tweets$text)
+```
+
+```{r}
+corona_tweets_clean
+```
+
+```{r}
+#preprocessing
+ corona_tweets_clean %>% 
+  unnest_tokens(word, clean_text) %>% # tokenization
+  anti_join(stop_words) #remove stop words
 
 ```
 
+
+```{r}
+corona_tweets %>% 
+  unnest_tokens(word, comments) %>% # tokenization
+  anti_join(stop_words) %>%  #remove stop words
+```
+
+
+```{r}
+corona_tweets_stripped
+```
 
