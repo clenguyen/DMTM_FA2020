@@ -65,19 +65,99 @@ corona_tweets_clean
 #preprocessing
  corona_tweets_clean %>% 
   unnest_tokens(word, clean_text) %>% # tokenization
-  anti_join(stop_words) #remove stop words
+  anti_join(stop_words) %>%  #remove stop words
+  count(Time, word, sort = TRUE) #count words
 
 ```
 
 
 ```{r}
 corona_tweets %>% 
-  unnest_tokens(word, comments) %>% # tokenization
-  anti_join(stop_words) %>%  #remove stop words
+  unnest_tokens(word, text) %>% # tokenization
+  anti_join(stop_words) #remove stop words
+  
 ```
 
 
 ```{r}
 corona_tweets_stripped
+```
+
+
+
+```{r}
+clean_tweet_tf_idf <- corona_tweets_clean %>% 
+  unnest_tokens(word, clean_text) %>% # tokenization
+  anti_join(stop_words) %>%  #remove stop words
+  count(Time, word, sort = TRUE) %>%  #count words
+  bind_tf_idf(word, Time, n) %>% 
+  #arrange(-tf_idf) %>% 
+  group_by(Time) %>% 
+  top_n(20) %>% 
+  ungroup()
+
+clean_tweet_tf_idf
+```
+
+
+
+```{r}
+#TF-IDF
+tweet_tf_idf <- corona_tweets %>% 
+  unnest_tokens(word, text) %>% # tokenization
+  anti_join(stop_words) %>%   #remove stop words
+  count(Time, word, sort = TRUE) %>%  #count words
+  bind_tf_idf(word, Time, n) %>% 
+  #arrange(-tf_idf) %>% 
+  group_by(Time) %>% 
+  top_n(20) %>% 
+  ungroup()
+
+tweet_tf_idf
+```
+
+
+Using `cast_dtm()`
+```{r}
+dtm_text <- clean_tweet_tf_idf %>% 
+  count(Time, word, sort = TRUE) %>% 
+  cast_dtm(Time, word, n)
+```
+
+
+Latent Dirichlet Allocation
+```{r}
+lda_text <- LDA(dtm_text, k = 2, control = list(seed = 1234))
+lda_text
+```
+
+```{r}
+text_topics <- tidy(lda_text, matrix = "beta")
+text_topics
+```
+
+```{r}
+top_terms <- text_topics %>% 
+  group_by(topic) %>% 
+  top_n(10, beta) %>% 
+  ungroup() %>% 
+  arrange(topic, -beta)
+
+top_terms
+```
+
+```{r}
+graph_topics <- top_terms %>% 
+  mutate(topic = paste0("Topic ", topic),
+         term = reorder(term, beta)) %>% 
+  ggplot(aes(x = term, y = beta, fill = factor(topic))) +
+  geom_col(alpha = 0.8, show.legend = FALSE) +
+  facet_wrap(~topic, scales = "free_y") +
+  coord_flip() +
+  labs(x = "", y = expression(beta)) +
+  theme_minimal()
+  
+
+graph_topics
 ```
 
