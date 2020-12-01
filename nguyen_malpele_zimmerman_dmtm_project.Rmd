@@ -21,7 +21,7 @@ corona_tweets_raw <- read_csv("./Corona_tweets.csv")
 
 ```{r}
 corona_tweets_raw %>%
-  sample_n(size = 10)
+  head(size = 10)
 ```
 
 Select only columns needed.
@@ -68,14 +68,6 @@ corona_tweets_clean
   anti_join(stop_words) %>%  #remove stop words
   count(Time, word, sort = TRUE) #count words
 
-```
-
-
-```{r}
-corona_tweets %>% 
-  unnest_tokens(word, text) %>% # tokenization
-  anti_join(stop_words) #remove stop words
-  
 ```
 
 
