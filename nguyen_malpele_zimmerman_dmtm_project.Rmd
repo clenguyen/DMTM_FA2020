@@ -79,11 +79,6 @@ corona_tweets %>%
 ```
 
 
-```{r}
-corona_tweets_stripped
-```
-
-
 
 ```{r}
 clean_tweet_tf_idf <- corona_tweets_clean %>% 
@@ -161,3 +156,212 @@ graph_topics <- top_terms %>%
 graph_topics
 ```
 
+#Bigrams
+
+```{r}
+bigram_filtered <- corona_tweets %>% 
+  unnest_tokens(bigram, text, token = "ngrams", n = 2) %>% 
+  separate(bigram, into = c("word1", "word2"), sep = " ") %>% 
+  filter(!word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word) %>%
+  filter(!word1 %in% c("https", "19", "t.co")) %>% 
+  filter(!word2 %in% c("https", "19", "t.co")) %>% 
+  count(word1, word2, sort = TRUE) %>% 
+  filter(n > 140)
+  
+bigram_filtered
+```
+
+
+```{r}
+bigram_graph <- bigram_filtered %>% 
+  graph_from_data_frame()
+
+bigram_graph
+```
+
+Create plot:
+
+```{r}
+set.seed(6648)
+
+# plot graph
+bigrams_network <- ggraph(bigram_graph, layout = "fr") +
+  geom_edge_link(
+    aes(edge_alpha = n), 
+    show.legend = FALSE,  
+    end_cap = circle(.07, 'inches'), 
+    arrow = arrow(length = unit(2, "mm"))) +
+  geom_node_point(color = "#53316B", 
+                  size = 2) +
+  geom_node_text(aes(label = name), 
+                 vjust = 1.5, hjust = 0.2, size = 3) + 
+  theme_void()
+
+bigrams_network
+```
+
+#Trigrams
+
+```{r}
+trigram_filtered <- corona_tweets %>% 
+  unnest_tokens(trigram, text, token = "ngrams", n = 3) %>% 
+  separate(trigram, into = c("word1", "word2", "word3"), sep = " ") %>% 
+  filter(!word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word) %>%
+  filter(!word3 %in% stop_words$word) %>%
+  filter(!word1 %in% c("https", "19", "t.co")) %>% 
+  filter(!word2 %in% c("https", "19", "t.co")) %>% 
+  filter(!word3 %in% c("https", "19", "t.co")) %>% 
+  count(word1, word2, word3, sort = TRUE) %>% 
+  filter(n > 25)
+  
+trigram_filtered
+```
+
+```{r}
+trigram_graph <- trigram_filtered %>% 
+  graph_from_data_frame()
+
+trigram_graph
+```
+
+```{r}
+set.seed(6648)
+
+# plot graph
+trigrams_network <- ggraph(trigram_graph, layout = "fr") +
+  geom_edge_link(
+    aes(edge_alpha = n), 
+    show.legend = FALSE,  
+    end_cap = circle(.07, 'inches'), 
+    arrow = arrow(length = unit(2, "mm"))) +
+  geom_node_point(color = "#53316B", 
+                  size = 2) +
+  geom_node_text(aes(label = name), 
+                 vjust = 1.5, hjust = 0.2, size = 3) + 
+  theme_void()
+
+trigrams_network
+```
+
+#Bigram Analysis
+
+```{r}
+china_bigram_filtered <- corona_tweets %>% 
+  unnest_tokens(bigram, text, token = "ngrams", n = 2) %>% 
+  separate(bigram, into = c("word1", "word2"), sep = " ") %>% 
+  filter(!word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word) %>%
+  filter(!word1 %in% c("https", "19", "t.co", "3", "4")) %>% 
+  filter(!word2 %in% c("https", "19", "t.co", "3", "4")) %>% 
+  filter(word1 %in% c("china", "chinese", "wuhan") | word2 %in% c("china", "chinese", "wuhan")) %>% 
+  count(word1, word2, sort = TRUE) %>% 
+  filter(n > 2)
+  
+china_bigram_filtered
+```
+
+```{r}
+china_bigram_graph <- china_bigram_filtered %>% 
+  graph_from_data_frame()
+
+china_bigram_graph
+```
+
+```{r}
+# plot graph
+china_bigrams_network <- ggraph(china_bigram_graph, layout = "fr") +
+  geom_edge_link(
+    aes(edge_alpha = n), 
+    show.legend = FALSE,  
+    end_cap = circle(.07, 'inches'), 
+    arrow = arrow(length = unit(2, "mm"))) +
+  geom_node_point(color = "#53316B", 
+                  size = 2) +
+  geom_node_text(aes(label = name), 
+                 vjust = 1.5, hjust = 0.2, size = 3) + 
+  theme_void()
+
+china_bigrams_network
+```
+
+#Exploring Italy
+
+```{r}
+italy_bigram_filtered <- corona_tweets %>% 
+  unnest_tokens(bigram, text, token = "ngrams", n = 2) %>% 
+  separate(bigram, into = c("word1", "word2"), sep = " ") %>% 
+  filter(!word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word) %>%
+  filter(!word1 %in% c("https", "19", "t.co", "2", "3", "4")) %>% 
+  filter(!word2 %in% c("https", "19", "t.co", "2", "3", "4")) %>% 
+  filter(word1 %in% c("italy", "italian", "europe") | word2 %in% c("italy", "italian", "europe")) %>% 
+  count(word1, word2, sort = TRUE) %>% 
+  filter(n > 2)
+  
+italy_bigram_filtered
+```
+
+```{r}
+italy_bigram_graph <- italy_bigram_filtered %>% 
+  graph_from_data_frame()
+
+italy_bigram_graph
+```
+
+```{r}
+# plot graph
+italy_bigrams_network <- ggraph( italy_bigram_graph, layout = "fr") +
+  geom_edge_link(
+    aes(edge_alpha = n), 
+    show.legend = FALSE,  
+    end_cap = circle(.07, 'inches'), 
+    arrow = arrow(length = unit(2, "mm"))) +
+  geom_node_point(color = "#53316B", 
+                  size = 2) +
+  geom_node_text(aes(label = name), 
+                 vjust = 1.5, hjust = 0.2, size = 3) + 
+  theme_void()
+
+italy_bigrams_network
+```
+
+```{r}
+fakenews_bigram_filtered <- corona_tweets %>% 
+  unnest_tokens(bigram, text, token = "ngrams", n = 2) %>% 
+  separate(bigram, into = c("word1", "word2"), sep = " ") %>% 
+  filter(!word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word) %>%
+  filter(!word1 %in% c("https", "19", "t.co", "2", "3", "4")) %>% 
+  filter(!word2 %in% c("https", "19", "t.co", "2", "3", "4")) %>% 
+  filter(word1 %in% c("conspiracy", "theory", "fake", "hoax", "created", "laboratory", "fakenews", "media") | word2 %in% c("conspiracy", "theory", "fake", "hoax", "created", "laboratory", "fakenews", "media")) %>% 
+  count(word1, word2, sort = TRUE) %>% 
+  filter(n > 2)
+  
+fakenews_bigram_filtered
+```
+
+```{r}
+fakenews_bigram_graph <- fakenews_bigram_filtered %>% 
+  graph_from_data_frame()
+
+fakenews_bigram_graph
+```
+
+```{r}
+# plot graph
+fakenews_bigrams_network <- ggraph( fakenews_bigram_graph, layout = "fr") +
+  geom_edge_link(
+    aes(edge_alpha = n), 
+    show.legend = FALSE,  
+    end_cap = circle(.07, 'inches'), 
+    arrow = arrow(length = unit(2, "mm"))) +
+  geom_node_point(color = "#53316B", 
+                  size = 2) +
+  geom_node_text(aes(label = name), 
+                 vjust = 1.5, hjust = 0.2, size = 3) + 
+  theme_void()
+
+fakenews_bigrams_network
+```
