@@ -1,10 +1,14 @@
 ---
 title: "Data Mining and Text Mining - Final Project"
 author: "Cindy Nguyen, Luiz Gustavo Fagundes Malpele, Isabel Zimmerman"
-output: html_notebook
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
+# Pre-processing (IZ)
 
-```{r, message = FALSE, warning=FALSE}
+```{r, message = FALSE, warning=FALSE, echo=FALSE}
 library(tidyverse)
 library(tidytext)
 library(topicmodels)
@@ -70,7 +74,7 @@ corona_tweets_clean
 
 ```
 
-
+# TF-IDF (Cindy)
 
 ```{r}
 clean_tweet_tf_idf <- corona_tweets_clean %>% 
@@ -148,7 +152,8 @@ graph_topics <- top_terms %>%
 graph_topics
 ```
 
-#Bigrams
+
+# Bigrams (Gustavo)
 
 ```{r}
 bigram_filtered <- corona_tweets %>% 
