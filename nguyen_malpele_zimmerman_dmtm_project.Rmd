@@ -82,14 +82,14 @@ clean_tweet_tf_idf <- corona_tweets_clean %>%
   anti_join(stop_words) %>%  #removing stop words
   count(Time, word, sort = TRUE) %>%  #counting words
   bind_tf_idf(word, Time, n) %>% 
-  #arrange(-tf_idf) %>% 
+  arrange(-tf_idf) %>% 
   group_by(Time) %>% 
-  #top_n(20) %>% 
+  top_n(20) %>% 
   ungroup()
 
 clean_tweet_tf_idf
 ```
-> We utilized the term frequency - inverse document frequency (TF-IDF) approach to identify specific words that have been relevant between March 16th to April 14th, 2020. The news of the pandemic began to surge around the beginning of March. This caused a rift in our normal day to day activities. Restaurants, bars, schools, small businesses, and others had to close down for the next couple of months per the regulation that each state have put in place. After reprocessing the corona tweets, we removed any stop words and measured the TF-IDF of those tokenized/clean words. The output displays the trending hashtags on specific days and the counts for that hastag. The `tf_idf` column represents how relevant those words are to the dataset. The closer the value is to $0$, it means that  
+> We utilized the term frequency - inverse document frequency (TF-IDF) approach to identify specific words that have been relevant between March 16th to April 14th, 2020. The news of the pandemic began to surge around the beginning of March. This caused a rift in our normal day to day activities. Restaurants, bars, schools, small businesses, and others had to close down for the next couple of months per the regulation that each state have put in place. After reprocessing the corona tweets, we removed any stop words and measured the TF-IDF of those tokenized/clean words. The output displays the trending hashtags on specific days and the counts for that hastag. The `tf_idf` column represents how relevant those words are to the dataset.  
 
 
 ```{r}
@@ -99,7 +99,7 @@ tweet_tf_idf <- corona_tweets %>%
   anti_join(stop_words) %>%   #removing stop words
   count(Time, word, sort = TRUE) %>%  #counting words
   bind_tf_idf(word, Time, n) %>% 
-  #arrange(-tf_idf) %>% 
+  arrange(tf_idf) %>% 
   group_by(Time) %>% 
   top_n(20) %>% 
   ungroup()
@@ -188,15 +188,21 @@ bigrams_network <- ggraph(bigram_graph, layout = "fr") +
     aes(edge_alpha = n), 
     show.legend = FALSE,  
     end_cap = circle(.07, 'inches'), 
-    arrow = arrow(length = unit(2, "mm"))) +
-  geom_node_point(color = "#53316B", 
-                  size = 2) +
+    arrow = grid::arrow(type = "closed", length = unit(.08, "inches"))) +
+  geom_node_point(color = "lightblue", size = 3) +
   geom_node_text(aes(label = name), 
-                 vjust = 1.5, hjust = 0.2, size = 3) + 
+                 vjust = 1, hjust = 1, size = 3) + 
   theme_void()
 
 bigrams_network
 ```
+
+### Analysis
+
+ When it comes to this first bigram visualization, it becomes clear that the most significant population's concern at the beginning of the pandemic was survival. The more frequent word combinations were related to the consumption of essential goods: groceries from the __grocery store__, __hand sanitizing__ for protection. It is necessary to highlight the __panic buying__ behavior that happened at the time. The population was not only commenting about it but also adopting this behavior as all shelves were getting empty, and there was even a shortage on __toilet paper__. Furthermore, the impacts from Covid-19 were also felt on the economy as the __oil prices__ suddenly dropped. It is also highlighted through the Trigrams' visualization that has __low oil prices__ on the top 10 word combinations.
+ 
+ Finally, this bigram does an excellent job capturing the population's fear of the pandemic and the overall anxiety that has driven the panic buying behavior.
+
 
 #Trigrams
 
@@ -232,17 +238,20 @@ trigrams_network <- ggraph(trigram_graph, layout = "fr") +
     aes(edge_alpha = n), 
     show.legend = FALSE,  
     end_cap = circle(.07, 'inches'), 
-    arrow = arrow(length = unit(2, "mm"))) +
-  geom_node_point(color = "#53316B", 
-                  size = 2) +
+    arrow = grid::arrow(type = "closed", length = unit(.08, "inches"))) +
+  geom_node_point(color = "lightblue", size = 3) +
   geom_node_text(aes(label = name), 
-                 vjust = 1.5, hjust = 0.2, size = 3) + 
+                 vjust = 1, hjust = 1, size = 3) + 
   theme_void()
 
 trigrams_network
 ```
 
-#Bigram Analysis
+#Analysis
+
+ There is not a big difference when comparing the content of the Bigrams and Trigrams; this visualization reinforces what was previously said, the most relevant and frequent trigrams are __grocery store workers__, __stop panic buying__, __low oil prices__ which all refer to the pandemic's impact, the panic buying behavior, and how it affects the economy in general. An interesting trigram that appeared on the top 3 most frequent is __loca grocery store__, which refers to people on Twitter creating a movement for the population to support small businesses in their neighborhood.
+
+# Filtered Bigram Analysis
 
 ```{r}
 china_bigram_filtered <- corona_tweets %>% 
@@ -273,15 +282,20 @@ china_bigrams_network <- ggraph(china_bigram_graph, layout = "fr") +
     aes(edge_alpha = n), 
     show.legend = FALSE,  
     end_cap = circle(.07, 'inches'), 
-    arrow = arrow(length = unit(2, "mm"))) +
-  geom_node_point(color = "#53316B", 
-                  size = 2) +
+    arrow = grid::arrow(type = "closed", length = unit(.08, "inches"))) +
+  geom_node_point(color = "lightblue", size = 3) +
   geom_node_text(aes(label = name), 
-                 vjust = 1.5, hjust = 0.2, size = 3) + 
+                 vjust = 1, hjust = 1, size = 3) + 
   theme_void()
 
 china_bigrams_network
 ```
+
+#Analysis
+
+ Since it was impossible to extract more information from the Bigrams and Trigrams, some words were isolated from commanding the next steps' analysis. For this first example, three names were used, which are: _China_, _Chinese_, and _Wuhan_. This analysis aims to understand the overall sentiment around the Chinese people as there were xenophobic attacks in a subway in New York.
+ 
+ There are some predominant negative bigrams: __China lied__, __China panic__, __stocks China__ (referring to stocks drop), and __chinese virus__. Overall, most of the tweets had this negative connotation and aimed to blame China for what is happening, the most prominent example of it the bigram _chinese virus_ which is ranked top 1 when it comes to China bigrams.
 
 #Exploring Italy
 
@@ -309,56 +323,64 @@ italy_bigram_graph
 
 ```{r}
 # plot graph
-italy_bigrams_network <- ggraph( italy_bigram_graph, layout = "fr") +
+italy_bigrams_network <- ggraph(italy_bigram_graph, layout = "fr") +
   geom_edge_link(
     aes(edge_alpha = n), 
     show.legend = FALSE,  
     end_cap = circle(.07, 'inches'), 
-    arrow = arrow(length = unit(2, "mm"))) +
-  geom_node_point(color = "#53316B", 
-                  size = 2) +
+    arrow = grid::arrow(type = "closed", length = unit(.08, "inches"))) +
+  geom_node_point(color = "lightblue", size = 3) +
   geom_node_text(aes(label = name), 
-                 vjust = 1.5, hjust = 0.2, size = 3) + 
+                 vjust = 1, hjust = 1, size = 3) + 
   theme_void()
 
 italy_bigrams_network
 ```
 
+ On the other hand, when it comes to analyzing tweets around Italy, which was the most affected country after China, the only tweet pointing it as a Covid-19 spread is the bigram __door italy__. Some other countries, such as Spain and the United Kingdom, are also connected to Italy, making sense. These two were also affected countries at the beginning of the pandemic and had a high number of daily cases and deaths.
+
+#Exploring USA States
+
 ```{r}
-fakenews_bigram_filtered <- corona_tweets %>% 
+usa_bigram_filtered <- corona_tweets %>% 
   unnest_tokens(bigram, text, token = "ngrams", n = 2) %>% 
   separate(bigram, into = c("word1", "word2"), sep = " ") %>% 
   filter(!word1 %in% stop_words$word) %>% 
   filter(!word2 %in% stop_words$word) %>%
   filter(!word1 %in% c("https", "19", "t.co", "2", "3", "4")) %>% 
   filter(!word2 %in% c("https", "19", "t.co", "2", "3", "4")) %>% 
-  filter(word1 %in% c("conspiracy", "theory", "fake", "hoax", "created", "laboratory", "fakenews", "media") | word2 %in% c("conspiracy", "theory", "fake", "hoax", "created", "laboratory", "fakenews", "media")) %>% 
+  filter(word1 %in% c("usa", "california", " florida", "trump") | word2 %in% c("usa", "california", "florida", "trump")) %>% 
   count(word1, word2, sort = TRUE) %>% 
   filter(n > 2)
   
-fakenews_bigram_filtered
+usa_bigram_filtered
 ```
 
 ```{r}
-fakenews_bigram_graph <- fakenews_bigram_filtered %>% 
+usa_bigram_graph <- usa_bigram_filtered %>% 
   graph_from_data_frame()
 
-fakenews_bigram_graph
+usa_bigram_graph
 ```
 
 ```{r}
 # plot graph
-fakenews_bigrams_network <- ggraph( fakenews_bigram_graph, layout = "fr") +
+usa_bigrams_network <- ggraph( usa_bigram_graph, layout = "fr") +
   geom_edge_link(
     aes(edge_alpha = n), 
     show.legend = FALSE,  
     end_cap = circle(.07, 'inches'), 
-    arrow = arrow(length = unit(2, "mm"))) +
-  geom_node_point(color = "#53316B", 
-                  size = 2) +
+    arrow = grid::arrow(type = "closed", length = unit(.08, "inches"))) +
+  geom_node_point(color = "lightblue", size = 3) +
   geom_node_text(aes(label = name), 
-                 vjust = 1.5, hjust = 0.2, size = 3) + 
+                 vjust = 1, hjust = 1, size = 3) + 
   theme_void()
 
-fakenews_bigrams_network
+usa_bigrams_network
 ```
+
+# Analysis USA
+
+ Lastly, this geospatial analysis focuses on how the pandemic affected USA states (Florida and California as there was no relevant data on New York) and Trumps' mentions. He was the person in charge to address the population and respond to the pandemic. It is interesting to observe that while Florida's bigrams refer to spatial locations such as __Central Florida__, __Miami Florida__, and __Central Florida__, which are tweets addressing the spread of the virus on the state, California's bigrams show how this state has already started planning a response to the virus: __California launches__ (a plan) and __California governor__. 
+ 
+ Furthermore, when it comes to a response to the pandemic in a country-wide response, there was a big incidence of _Trump_ mentions as he was the president in charge of the response. There were bigrams that stood out which were __trump campaign__, __trump supporter__, __trump toiletpaper__, __trump administration__, __trump drug__ (hydroxychloroquine), and __trump met__. It is important to point out that 2020 was the election year in the United States. The overall feeling shows that the pandemic's response was also aligned with the president's interest in reelection.
