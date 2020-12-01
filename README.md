@@ -1,5 +1,6 @@
 # DMTM_FA2020
 Data Mining and Text Mining Final Project 
+
 CAP4770.01 | Fall 2020 | Florida Polytechnic University
 
 ### Project Description:
