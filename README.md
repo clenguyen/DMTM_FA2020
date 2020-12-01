@@ -1,5 +1,6 @@
 # Data Mining and Text Mining Final Project 
 CAP4770.01 | Fall 2020 | Florida Polytechnic University
+
 Cindy Nguyen | Isabel Zimmerman | Luiz Gustavo Fagundes Malpele
 
 ### Project Description:
