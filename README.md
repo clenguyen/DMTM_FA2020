@@ -1,7 +1,6 @@
-# DMTM_FA2020
-Data Mining and Text Mining Final Project 
-
+# Data Mining and Text Mining Final Project 
 CAP4770.01 | Fall 2020 | Florida Polytechnic University
+Cindy Nguyen | Isabel Zimmerman | Luiz Gustavo Fagundes Malpele
 
 ### Project Description:
 This project provides text mining and analysis from COVID-19 tweets found in [this dataset](https://www.kaggle.com/datatattle/coronavirus-tweets). This analysis utilizes tf-idf, LDA, and n-grams in order to create a better understanding of the feelings towards the novel coronavirus from March 16, 2020 to April 14, 2020. Conclusions include that the sentiment is largely regionally based. Future work on this project could explore sentiment drift further into the year. 
@@ -17,8 +16,8 @@ For this analysis, the primary analysis uses  `text` to gather a sentiment overv
 
 ### Team members: 
 
-- Student 1 [Isabel Zimmerman](mailto:izimmerman5298@floridapoly.edu)
-- Student 2 [Cindy Nguyen](mailto:cnguyen5356@floridapoly.edu)
-- Student 3 [Luiz Gustavo Fagundes Malpele](mailto:lfagundesmalpele664@floridapoly.edu)
+- [Isabel Zimmerman](mailto:izimmerman5298@floridapoly.edu)
+- [Cindy Nguyen](mailto:cnguyen5356@floridapoly.edu)
+- [Luiz Gustavo Fagundes Malpele](mailto:lfagundesmalpele664@floridapoly.edu)
 
 
