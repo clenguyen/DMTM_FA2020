@@ -19,7 +19,7 @@ library(datetime)
 ```
 
 ```{r}
-# reading a CSV file
+# reading CSV file
 corona_tweets_raw <- read_csv("./Corona_tweets.csv")
 ```
 
@@ -79,25 +79,25 @@ corona_tweets_clean
 ```{r}
 clean_tweet_tf_idf <- corona_tweets_clean %>% 
   unnest_tokens(word, clean_text) %>% # tokenization
-  anti_join(stop_words) %>%  #remove stop words
-  count(Time, word, sort = TRUE) %>%  #count words
+  anti_join(stop_words) %>%  #removing stop words
+  count(Time, word, sort = TRUE) %>%  #counting words
   bind_tf_idf(word, Time, n) %>% 
   #arrange(-tf_idf) %>% 
   group_by(Time) %>% 
-  top_n(20) %>% 
+  #top_n(20) %>% 
   ungroup()
 
 clean_tweet_tf_idf
 ```
-
+> We utilized the term frequency - inverse document frequency (TF-IDF) approach to identify specific words that have been relevant between March 16th to April 14th, 2020. The news of the pandemic began to surge around the beginning of March. This caused a rift in our normal day to day activities. Restaurants, bars, schools, small businesses, and others had to close down for the next couple of months per the regulation that each state have put in place. After reprocessing the corona tweets, we removed any stop words and measured the TF-IDF of those tokenized/clean words. The output displays the trending hashtags on specific days and the counts for that hastag. The `tf_idf` column represents how relevant those words are to the dataset. The closer the value is to $0$, it means that  
 
 
 ```{r}
 #TF-IDF
 tweet_tf_idf <- corona_tweets %>% 
   unnest_tokens(word, text) %>% # tokenization
-  anti_join(stop_words) %>%   #remove stop words
-  count(Time, word, sort = TRUE) %>%  #count words
+  anti_join(stop_words) %>%   #removing stop words
+  count(Time, word, sort = TRUE) %>%  #counting words
   bind_tf_idf(word, Time, n) %>% 
   #arrange(-tf_idf) %>% 
   group_by(Time) %>% 
