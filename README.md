@@ -1,12 +1,12 @@
 # DMTM_FA2020
-Data Mining and Text Mining Final Project, Fall 2020
-Florida Polytechnic University
+Data Mining and Text Mining Final Project 
+CAP4770.01 | Fall 2020 | Florida Polytechnic University
 
 ### Project Description:
-This project provides text mining and analysis from COVID-19 tweets found in [this dataset](). This analysis utilizes tf-idf, LDA, and n-grams in order to create a better understanding of the feelings towards the novel coronavirus from March 16, 2020 to April 14, 2020. Future work on this project could explore sentiment drift further into the year. 
+This project provides text mining and analysis from COVID-19 tweets found in [this dataset](https://www.kaggle.com/datatattle/coronavirus-tweets). This analysis utilizes tf-idf, LDA, and n-grams in order to create a better understanding of the feelings towards the novel coronavirus from March 16, 2020 to April 14, 2020. Conclusions include that the sentiment is largely regionally based. Future work on this project could explore sentiment drift further into the year. 
 
 ### Data
-The data pulled from Kaggle dataset [here]() offers:
+The data pulled from Kaggle dataset [here](https://www.kaggle.com/datatattle/coronavirus-tweets) offers:
 - `User_name`: deidentified as a number
 - `Time`: dates in the form of DD-MM-YYYY dates
 - `Location`: self-identified user location from twitter bio
