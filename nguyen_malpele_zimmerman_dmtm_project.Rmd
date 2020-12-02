@@ -78,14 +78,38 @@ corona_tweet_tf_idf <- corona_tweets %>%
   anti_join(stop_words) %>%  #removing stop words
   count(Time, word, sort = TRUE) %>%  #counting words
   bind_tf_idf(word, Time, n) %>% 
-  arrange(-tf_idf) %>% 
+  arrange(tf_idf) %>% 
   group_by(Time) %>% 
   top_n(20) %>% 
   ungroup()
 
 corona_tweet_tf_idf
 ```
-We utilized the term frequency - inverse document frequency (TF-IDF) approach to identify specific words that have been relevant between March 16th to April 14th, 2020. The news of the pandemic began to surge around the beginning of March. This caused a rift in our normal day to day activities. Restaurants, bars, schools, small businesses, and others had to close down for the next couple of months per the regulation that each state have put in place. After reprocessing the corona tweets, we removed any stop words and measured the TF-IDF of those tokenized/clean words. The output displays the trending hashtags on specific days and the counts for that hastag. The `tf_idf` column represents how relevant those words are to the dataset.  
+### Analysis
+
+We utilized the term frequency - inverse document frequency (TF-IDF) approach to identify specific words that have been relevant between March 16th to April 14th, 2020. The news of the pandemic began to surge around the beginning of March. This caused a rift in our normal day to day activities. Restaurants, bars, schools, small businesses, and others had to close down for the next couple of months per the regulation that each state have put in place.
+
+After preprocessing the corona tweets, stop words were removed and the TF-IDF was measured.
+The output displays the trending hashtags on specific days and the counts for that hastag. The `tf_idf` column represents how relevant those words are to the dataset. For example, the word `paracetamol` trended on March 19th, 2020. This was relatively the beginning of when shutdowns began to occur. Paracetamol is also known as acetaminophen or medications like Tylenol. This medication is a fever reducer and helps treat mild to moderate pain. The take away from this is that Paracetamol was trending as this was an alternative to treat the severe symptoms of COVID-19 while a vaccine was to be made for it.  
+
+```{r}
+text_plot <- corona_tweet_tf_idf %>% 
+  mutate(word = reorder(word, tf_idf)) %>% 
+  filter(str_detect(Time, c("17-03-2020", "13-04-2020"))) %>% 
+  ggplot(aes(x = word, y = tf_idf, fill = Time)) +
+  geom_col(alpha = 0.8, show.legend = FALSE) + 
+  facet_wrap(~ Time, scales = "free", ncol = 2) +
+  coord_flip() +
+  labs(x = "", y = "TF-IDF", title = "Highest tf-idf words in text data") +
+  theme_minimal()
+  
+
+text_plot
+```
+### Analysis
+
+The visualization depicts the highest tf-idf words between March 17th and April 11th, 2020. These dates were chosen to visualize the differences to when the pandemic shutdown began to about less than a month after to see what things were trending. It is apparent that COVID-19 topics would still be relevant in the two outputs. During the week of April 13th, the IRS began sending out stimulus checks to the 80 million eligible Americans through their direct deposit. This was to aid many individuals who lost their jobs or struggling to make amends meet during the early stages of the pandemic shutdown.
+
 
 # LDA
 
@@ -130,7 +154,9 @@ graph_topics <- top_terms %>%
 
 graph_topics
 ```
+### Analysis
 
+Latent Dirichlet Allocation allows to see what words are associated with each topic. Topic 1 seems to cover more generic and mainstream words.
 
 # N-grams
 ## Bigrams
