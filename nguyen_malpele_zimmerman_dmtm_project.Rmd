@@ -32,12 +32,23 @@ corona_tweets_raw <- read_csv("./Corona_tweets.csv")
 corona_tweets_raw %>%
   head(size = 10)
 ```
+
+## Data
+The data pulled from Kaggle dataset [here](https://www.kaggle.com/datatattle/coronavirus-tweets) offers:
+
+- `User_name`: deidentified as a number
+- `Time`: dates in the form of DD-MM-YYYY dates
+- `Location`: self-identified user location from twitter bio
+- `text`: the tweet itself
+
+For this analysis, the primary analysis uses  `text` to gather a sentiment overview. This data is stripped of punctuation, other tagged users, excape characters, and links in order to ensure data quality. 
+
 ```{r, echo=FALSE}
 corona_tweets <- corona_tweets_raw %>% 
   select(Time, text)
 ```
 
-Function to clean tweets
+We used a function to clean tweets, as it creates and easily reproducible set and makes updating how tweets need to be cleaned very easy.
 ```{r}
 #clean tweets
 clean_tweets <- function(x) {
@@ -55,13 +66,14 @@ clean_tweets <- function(x) {
 }
 ```
 
+Next, we clean the raw text and put it in a new column called `clean_text` in a new dataframe, _corona_tweets_.
 ```{r}
 corona_tweets$clean_text <- clean_tweets(corona_tweets_raw$text)
 
 corona_tweets
 ```
 
-
+We'll take a quick peek at the most used words overall in order to do a quick sanity check that the data makes sense.
 ```{r}
 # view most-used words
  corona_tweets %>% 
@@ -396,3 +408,9 @@ usa_bigrams_network
  Lastly, this geospatial analysis focuses on how the pandemic affected USA states (Florida and California as there was no relevant data on New York) and Trumps' mentions. He was the person in charge to address the population and respond to the pandemic. It is interesting to observe that while Florida's bigrams refer to spatial locations such as __Central Florida__, __Miami Florida__, and __Central Florida__, which are tweets addressing the spread of the virus on the state, California's bigrams show how this state has already started planning a response to the virus: __California launches__ (a plan) and __California governor__. 
  
  Furthermore, when it comes to a response to the pandemic in a country-wide response, there was a big incidence of _Trump_ mentions as he was the president in charge of the response. There were bigrams that stood out which were __trump campaign__, __trump supporter__, __trump toiletpaper__, __trump administration__, __trump drug__ (hydroxychloroquine), and __trump met__. It is important to point out that 2020 was the election year in the United States. The overall feeling shows that the pandemic's response was also aligned with the president's interest in reelection.
+ 
+ 
+ # Final Remarks
+
+Overall, we found that there is contrast in bigrams when it comes to geospatial regions and coronavirus. While tweets seem to blame China for the existence of the virus, others seem to view California as a state with a plan. Further work could use STM or more sophisticated sentiment analysis techniques in order to build a robust case for regional sentiment differences. 
+
