@@ -70,6 +70,8 @@ corona_tweets
   count(word, sort = TRUE) #count words
 ```
 
+
+
 # TF-IDF
 
 ```{r}
@@ -109,6 +111,8 @@ text_plot
 ### Analysis
 
 The visualization depicts the highest tf-idf words between March 17th and April 11th, 2020. These dates were chosen to visualize the differences to when the pandemic shutdown began to about less than a month after to see what things were trending. It is apparent that COVID-19 topics would still be relevant in the two outputs. During the week of April 13th, the IRS began sending out stimulus checks to the 80 million eligible Americans through their direct deposit. This was to aid many individuals who lost their jobs or struggling to make amends meet during the early stages of the pandemic shutdown.
+
+Some of the words here are unfamilar to the purpose of this project like `smithfield`, `quiroga`, `rmc`, `msc` and a few others. For some future work, our group could dive further into the dataset to clean the tweets even more to pertain only to COVID-related topics.
 
 
 # LDA
@@ -156,7 +160,9 @@ graph_topics
 ```
 ### Analysis
 
-Latent Dirichlet Allocation allows to see what words are associated with each topic. Topic 1 seems to cover more generic and mainstream words.
+Latent Dirichlet Allocation allows us to see what words are associated with each topic. Observing the two topics here, neither of them seem to have a distinction between the them. It is difficult to make a generalization about it. Topic 1 seems to cover more generic and mainstream words. Topic 2 has some relevant words that occured during the shutdown in March like `toiletpaper`, `stoppanicbuying`, and `stayhomesavelives`.
+
+
 
 # N-grams
 ## Bigrams
